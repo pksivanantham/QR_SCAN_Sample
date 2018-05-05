@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QR Code Scanner</title>
+    <script type="text/javascript" src="instascan.min.js"></script>
+  </head>
+  <body>
+      <h1>QR Code Scanner</h1>
+      <div>
+      <button id='qrScanStart'>Click here to start scan</button>
+      <button id='qrScanStop' style="display:none;background-color: red">Click here to stop scan</button>
+    </div>
+    <video id="preview"></video>
+    <div>
+        <span><b>Results</b></span>
+        <div id="scanResult">
+
+        </div>
+    </div>
+    <script type="text/javascript">
+    let scanResultDiv=document.getElementById('scanResult');
+    let qrScanStartButton=document.getElementById('qrScanStart');
+      let qrScanStopButton=document.getElementById('qrScanStop');
+
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      scanner.addListener('scan', function (content) {        
+        alert('scanned successfully');
+        scanResultDiv.innerText=content;
+      });
+           
+
+      qrScanStartButton.addEventListener('click', function (event) {
+
+        qrScanStartButton.style.display='none';
+        qrScanStopButton.style.display='block';
+        Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+      });
+      qrScanStopButton.addEventListener('click', function (event) {
+        qrScanStopButton.style.display='none';
+        qrScanStartButton.style.display='block';
+        
+      });
+
+      
+    </script>
+  </body>
+</html>
